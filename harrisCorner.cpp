@@ -47,5 +47,5 @@ void displayKeypoints(const vector<KeyPoint> &keypoints_vec, const Mat &img){
     drawKeypoints(img, keypoints_vec, out_img);
 
     namedWindow( corners_window );
-    imshow( corners_window, out_img ); 
+    imshow( corners_window, out_img );
 }
