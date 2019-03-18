@@ -36,6 +36,31 @@ void getHomographyMat(Mat &Homo) {
 }
 
 int main() {
+    //TODO: c++ class big three
+    //load image
+    Mat img1 = imread("../project_images/MelakwaLake1.png", IMREAD_GRAYSCALE);
+    Mat img2 = imread("../project_images/MelakwaLake2.png", IMREAD_GRAYSCALE);
+
+    if (!img1.data || !img2.data) {
+        cout << "Fail to load image!" << endl;
+        exit(1);
+    }
+
+    Match *matcher = new Match();
+    matcher->findMatches(img1, img2);
+
+    self::RANSAC *rsc = new self::RANSAC();
+    rsc->create(img1, img2);
+    vector<DMatch> matches;
+    int numMatches;
+    int numIterations = 20;
+    float inlierThreshold = 1000;
+    Mat homo;
+    Mat homInv;
+    Mat image1Display;
+    Mat image2Display;
+    rsc->doRANSAC(matches, numMatches, numIterations, inlierThreshold, homo, homInv, image1Display, image2Display);
+
 
 //    //load image
 //    Mat src;
@@ -51,10 +76,7 @@ int main() {
 //    homographyTransform(src, homo, outImage);
 //    //homographyTransform2(src, homo, outImage);
 
-    findMatches();
-
-
-
+//    findMatches();
 
 
     waitKey(0);
