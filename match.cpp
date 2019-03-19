@@ -56,7 +56,7 @@ void Match::SSDRatioTest(const vector<vector<DMatch>> &matches, float ratio, flo
     for (size_t i = 0; i < matches.size(); ++i) {
         DMatch match1 = matches[i][0];
         DMatch match2 = matches[i][1];
-        cout << i << ": " << match1.distance << "\t" << match2.distance << endl;
+        //cout << i << ": " << match1.distance << "\t" << match2.distance << endl;
         if ((match1.distance < (ratio * match2.distance)) && (match1.distance < thresh)) {
             good_matches.push_back(match1);
         }
@@ -79,10 +79,12 @@ void Match::findMatches(const Mat &gray_img1, const Mat &gray_img2) {
     float thresh = 2.5;
     SSDRatioTest(matches, ratio, thresh);
 
+    /*
     //draw matches
     Mat matches_img;
     drawMatches(gray_img1, keypoints_vec1, gray_img2, keypoints_vec2, good_matches, matches_img);
     imshow("Matches", matches_img);
+    */
 }
 
 vector<KeyPoint> Match::getKeypointsVec(int i){

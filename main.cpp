@@ -38,45 +38,37 @@ void getHomographyMat(Mat &Homo) {
 int main() {
     //TODO: c++ class big three
     //load image
-    Mat img1 = imread("../project_images/MelakwaLake1.png", IMREAD_GRAYSCALE);
-    Mat img2 = imread("../project_images/MelakwaLake2.png", IMREAD_GRAYSCALE);
+    string img_name1 = "../project_images/MelakwaLake2.png";
+    string img_name2 = "../project_images/MelakwaLake3.png";
 
-    if (!img1.data || !img2.data) {
+    Mat gray_img1 = imread(img_name1, IMREAD_GRAYSCALE);
+    Mat gray_img2 = imread(img_name2, IMREAD_GRAYSCALE);
+
+    Mat color_img1 = imread(img_name1, IMREAD_COLOR);
+    Mat color_img2 = imread(img_name2, IMREAD_COLOR);
+
+    if (!gray_img1.data || !gray_img2.data) {
         cout << "Fail to load image!" << endl;
         exit(1);
     }
 
-    Match *matcher = new Match();
-    matcher->findMatches(img1, img2);
+
+    int numIterations = 30;
+    double inlierThreshold = 2;
+    Mat homo, homInv;
 
     self::RANSAC *rsc = new self::RANSAC();
-    rsc->create(img1, img2);
-    vector<DMatch> matches;
-    int numMatches;
-    int numIterations = 20;
-    float inlierThreshold = 1000;
-    Mat homo;
-    Mat homInv;
-    Mat image1Display;
-    Mat image2Display;
-    rsc->doRANSAC(matches, numMatches, numIterations, inlierThreshold, homo, homInv, image1Display, image2Display);
+    rsc->create(gray_img1, gray_img2);
+    rsc->doRANSAC(numIterations, inlierThreshold, homo, homInv, color_img1, color_img2);
 
+//    rsc->iterRANSAC(numIterations, inlierThreshold, homo);
+//    rsc->computeRefinedHomography(homo, homo, homInv, inlierThreshold);
+//    rsc->displayInliersMatches(color_img1, color_img2);
+//    rsc->doRANSAC2(homo);
 
-//    //load image
-//    Mat src;
-//    string imgName = "../project_images/MelakwaLake1.png";
-//    loadImage(src, imgName);
-//
-//    //get homography matrix
-//    Mat homo;
-//    getHomographyMat(homo);
-//
-//    //get image after homography transform
 //    Mat outImage;
-//    homographyTransform(src, homo, outImage);
-//    //homographyTransform2(src, homo, outImage);
-
-//    findMatches();
+//    cout << homo << endl;
+//    rsc->homographyTransform(color_img1, homo, outImage);
 
 
     waitKey(0);

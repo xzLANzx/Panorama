@@ -16,19 +16,23 @@ namespace self{
     public:;
         RANSAC();
         void create(const Mat &gray_img1, const Mat &gray_img2);
-        void doRANSAC(const vector<DMatch> &matches, int &numMatches, int numIterations, float inlierThreshold, const Mat &homo, const Mat &homInv, Mat &image1Display, Mat &image2Display);
-    private:
-        void computeInlierCount(const Mat &homo, const vector<DMatch> &matches, int &numMatches, float inlierThreshold);
-
-        //auxiliary functions
-        void project(const float &x1, const float &y1, const Mat &homo, float &x2, float &y2);
+        void doRANSAC(int numIterations, double inlierThreshold, Mat &homo, Mat &homInv, const Mat &displayImage1, const Mat &displayImage2);
         void homographyTransform(const Mat &src_img, const Mat &homo, Mat &out_img);    //with self implemented project method
         void homographyTransform2(const Mat &src_img, const Mat &homo, Mat &out_img);   //with build-in perspective transform
+    private:
+        //auxiliary functions
+        void project(const double &x1, const double &y1, const Mat &homo, double &x2, double &y2);
+        void computeInlierCount(const Mat &homo, int &inliersCount, double inlierThreshold);
+        void iterRANSAC(int numIterations, double inlierThreshold, Mat &homo);
+        void computeRefinedHomography(const Mat &bestHomo, Mat &homo, Mat &homInv, double inlierThreshold);
+        void displayInliersMatches(const Mat &img1, const Mat &img2);
+
 
         //data members
         vector<KeyPoint> keypoints_vec1;
         vector<KeyPoint> keypoints_vec2;
-        vector<DMatch> good_matches;
+        vector<DMatch> good_matches;            //match after ssd
+        vector<DMatch> inliers_matches;         //inliers match
     };
 }
 
