@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(OpenCV REQUIRED)
 
 set(HEADER_FILES )
-set(SOURCE_FILES main.cpp ransac.cpp match.cpp harrisCornerDetection.cpp)
+set(SOURCE_FILES main.cpp ransac.cpp match.cpp harrisCornerDetection.cpp stitch.cpp functions.cpp)
 
 add_executable(panorama ${SOURCE_FILES})
 

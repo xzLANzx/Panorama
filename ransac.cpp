@@ -9,6 +9,7 @@ namespace self {
     }
 
     void RANSAC::create(const Mat &gray_img1, const Mat &gray_img2) {
+
         Match *matcher = new Match();
         matcher->findMatches(gray_img1, gray_img2);
         keypoints_vec1 = matcher->getKeypointsVec(1);
@@ -17,12 +18,11 @@ namespace self {
     }
 
     void RANSAC::project(const double &x1, const double &y1, const Mat &homo, double &x2, double &y2) {
-        Mat src_pt = Mat::zeros(3, 1, homo.type());
 
+        Mat src_pt = Mat::zeros(3, 1, homo.type());
         src_pt.at<double>(0, 0) = x1;
         src_pt.at<double>(1, 0) = y1;
         src_pt.at<double>(2, 0) = 1;
-
 
         Mat dst_pt = homo * src_pt;
         double w = dst_pt.at<double>(2, 0);
@@ -32,8 +32,7 @@ namespace self {
     }
 
     //computes the number of inlying points given a homography H
-    void
-    RANSAC::computeInlierCount(const Mat &homo, int &inliersCount, double inlierThreshold) {
+    void RANSAC::computeInlierCount(const Mat &homo, int &inliersCount, double inlierThreshold) {
         for (size_t i = 0; i < good_matches.size(); ++i) {
             //cout << "homo: " << homo << endl;
             DMatch pts_pair = good_matches[i];
@@ -93,7 +92,6 @@ namespace self {
                 scene.push_back(keypoints_vec2[rand_4_matches[r].trainIdx].pt);
             }
             Mat H = findHomography(obj, scene, 0);
-            //cout << "H: " << H << endl;
 
             //compute the number of inliers
             int inliersCount = 0;
@@ -210,6 +208,5 @@ namespace self {
 
         //display inliers
         displayInliersMatches(displayImage1, displayImage2);
-
     }
 }

@@ -42,6 +42,4 @@ private:
     vector<DMatch> good_matches;
 };
 
-
-
 #endif //PANORAMA_MATCH_H
