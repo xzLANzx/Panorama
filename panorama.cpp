@@ -9,77 +9,38 @@ void Panorama::create(int imgs_count, string img_name) {
 
     img_path = "../project_images/";
     this->img_name = img_name;
-    total_imgs_count = imgs_count;
+    max_id = imgs_count;
     for (size_t i = 0; i < imgs_count; ++i) {
         unstitched_imgs_vec.push_back(i + 1);
     }
-}
-
-void Panorama::stitch2(int index) {
-//    if (stitched_images_count == 0) {
-//
-//        base_image = imread(image_paths_vec[index], IMREAD_COLOR);
-//        stitched_images_count = 1;
-//    } else if (stitched_images_count == 1) {
-//
-//        //stitch the one with base image
-//        Mat color_img2 = imread(image_paths_vec[index], IMREAD_COLOR);
-//        Stitch *stitcher = new Stitch();
-//        Mat out_img;
-//        stitcher->stitchImages(base_image, color_img2, out_img);
-//        out_img.copyTo(base_image);
-//        stitched_images_count++;
-//        direction = stitcher->getDirection();
-//        cout << "Stitched to: " << direction << endl;
-//    } else if (stitched_images_count < images_count) {
-//
-//        //get the image 2 to stitch
-//        Mat color_img2 = imread(image_paths_vec[index], IMREAD_COLOR);
-//
-//        int prev_direction = direction;
-//
-//        //compute the new stitching direction
-//        Stitch *stitcher = new Stitch();
-//        Mat homo, homInv;
-//        stitcher->computeHomo(base_image, color_img2, homo, homInv);
-//        stitcher->computeStitchedImgInfo(base_image, color_img2, homInv);
-//        int next_direction = stitcher->getDirection();
-//
-//    }
-//
-//    imshow("Base Image", base_image);
+    countMatches();
 }
 
 void Panorama::countMatches() {
 
-    string path = img_path + img_name;
     int unstitched_imgs_count = unstitched_imgs_vec.size();
-    if (unstitched_imgs_count == total_imgs_count) {
+    matches_count.clear();
+    vector<int> row(unstitched_imgs_count);
+    matches_count = vector<vector<int>>(unstitched_imgs_count);
+    for (size_t i = 0; i < unstitched_imgs_count; ++i)
+        matches_count[i] = row;
 
-        matches_count.clear();
-        vector<int> row(unstitched_imgs_count);
-        matches_count = vector<vector<int>>(unstitched_imgs_count);
-        for (size_t i = 0; i < unstitched_imgs_count; ++i)
-            matches_count[i] = row;
+    //compute matches count
+    string path = img_path + img_name;
+    for (size_t i = 0; i < unstitched_imgs_count; ++i) {
+        for (size_t j = i + 1; j < unstitched_imgs_count; ++j) {
 
-        //compute match count and pick two
-        for (size_t i = 0; i < unstitched_imgs_count; ++i) {
-            for (size_t j = i + 1; j < unstitched_imgs_count; ++j) {
+            string img1_path = path + to_string(unstitched_imgs_vec[i]) + ".png";
+            string img2_path = path + to_string(unstitched_imgs_vec[j]) + ".png";
+            Mat color_img1 = imread(img1_path, IMREAD_COLOR);
+            Mat color_img2 = imread(img2_path, IMREAD_COLOR);
 
-                string img1_path = path + to_string(unstitched_imgs_vec[i]) + ".png";
-                string img2_path = path + to_string(unstitched_imgs_vec[j]) + ".png";
-                Mat color_img1 = imread(img1_path, IMREAD_COLOR);
-                Mat color_img2 = imread(img2_path, IMREAD_COLOR);
-
-                Match *matcher = new Match();
-                matcher->findMatches(color_img1, color_img2);
-                int num_matches = matcher->getMatchesCount();
-                matches_count[i][j] = num_matches;
-                matches_count[j][i] = num_matches;
-            }
+            Match *matcher = new Match();
+            matcher->findMatches(color_img1, color_img2);
+            int num_matches = matcher->getMatchesCount();
+            matches_count[i][j] = num_matches;
+            matches_count[j][i] = num_matches;
         }
-    } else {
-        //compute match count between baseImage and other images
     }
 }
 
@@ -101,6 +62,8 @@ void Panorama::pickTwoImgs(int &max_i, int &max_j) {
 }
 
 void Panorama::stitch() {
+
+    //pick two images from matches count
     int i = 0, j = i + 1;
     pickTwoImgs(i, j);
 
@@ -115,9 +78,11 @@ void Panorama::stitch() {
     stitcher->stitchImages(color_img1, color_img2, out_img);
 
     //save the out_img to file with a new name
+    string out_img_name = generateNewImgName();
+    imwrite((img_path + out_img_name), out_img);
+    update(i, j);
     imshow("Test", out_img);
 }
-
 
 void Panorama::printMatchesCount() {
     for (size_t i = 0; i < matches_count.size(); ++i) {
@@ -126,10 +91,27 @@ void Panorama::printMatchesCount() {
         }
         cout << endl;
     }
+    cout << endl;
 }
 
+string Panorama::generateNewImgName() {
+    string new_name = img_name + to_string(max_id + 1) + ".png";
+    max_id++;
+    return new_name;
+}
 
-
+//update the info of unstitched images
+void Panorama::update(int i, int j) {
+    //remove i and j from the unstitched_imgs_vec
+    vector<int> new_unstitched_imgs_vec;
+    for (size_t k = 0; k < unstitched_imgs_vec.size(); ++k) {
+        if (k != i && k != j) {
+            new_unstitched_imgs_vec.push_back(unstitched_imgs_vec[k]);
+        }
+    }
+    new_unstitched_imgs_vec.push_back(max_id);
+    unstitched_imgs_vec = new_unstitched_imgs_vec;
+}
 
 
 

@@ -3,8 +3,6 @@
 //
 
 #include "ransac.h"
-
-
 Ransac::Ransac() {
 }
 

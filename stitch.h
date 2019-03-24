@@ -16,7 +16,6 @@ public:
     void stitchImages(const Mat &color_img1, const Mat &color_img2, Mat &out_img);
     void computeHomo(const Mat& color_img1, const Mat& color_img2, Mat &homo, Mat &homInv);
     void computeStitchedImgInfo(const Mat &img1, const Mat &img2, const Mat &homInv);
-    int getDirection();
 private:
     //auxiliary functions
     void copyShiftBaseImg(const Mat &base_img, const Size &shfit, const Size &stitched_img_size, Mat &out_img);
@@ -25,6 +24,5 @@ private:
     //data members
     Size img1_shift;            //shift of image 1 in the new stitched image
     Size stitched_img_size;     //stitched image size
-    int direction;              //stitched to the left or right of image 1
 };
 #endif //PANORAMA_STITCH_H

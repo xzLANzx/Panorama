@@ -18,17 +18,18 @@ public:
     void stitch();
     void printMatchesCount();
 
-    void stitch2(int index);
 private:
     //auxiliary functions
-
+    string generateNewImgName();
+    void update(int i, int j);
 
     //data members
-    Mat base_image;
     string img_path;
     string img_name;
-    int total_imgs_count;               //number of all the images to be stitched
-    vector<int> unstitched_imgs_vec;    //store the index of unstitched images
+    Mat stitched_img;
+
+    int max_id;                         //last id of saved image
+    vector<int> unstitched_imgs_vec;    //store the indices of unstitched images
     vector<vector<int>> matches_count;  //store num of matches between images
 };
 

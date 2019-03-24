@@ -61,29 +61,18 @@ void Stitch::computeStitchedImgInfo(const Mat &img1, const Mat &img2, const Mat 
         if (img2_corners[i].y < min_y) min_y = img2_corners[i].y;
         if (img2_corners[i].y > max_y) max_y = img2_corners[i].y;
     }
-//    cout << "min x: " << min_x << ", max x: " << max_x << endl;
-//    cout << "min y: " << min_y << ", max y: " << max_y << endl;
 
     stitched_img_size = Size((max_x - min_x), (max_y - min_y));
     //how much image 1 should shift to the right in the new stitched image
     img1_shift = Size((0 - min_x), (0 - min_y));
-    if(min_x < 0)
-        direction  = -1;    //stitched on the left
-    else
-        direction = 1;      //sttiched on the right
-
 }
 
 void Stitch::copyShiftBaseImg(const Mat &base_img, const Size &shift, const Size &stitched_img_size, Mat &out_img) {
+
     out_img = Mat::zeros(stitched_img_size, base_img.type());
-    cout << base_img.size() << endl;
 
     double shift_x = shift.width;
     double shift_y = shift.height;
-
-//    cout << "shift x: " << shift_x << endl;
-//    cout << "shift y: " << shift_y << endl;
-
     for (size_t i = 0; i < base_img.rows; ++i) {
         for (size_t j = 0; j < base_img.cols; ++j) {
             out_img.at<Vec3b>(i + shift_y, j + shift_x) = base_img.at<Vec3b>(i, j);
@@ -132,10 +121,4 @@ void Stitch::stitchImages(const Mat &color_img1, const Mat &color_img2, Mat &out
     computeStitchedImgInfo(color_img1, color_img2, homInv);
     copyShiftBaseImg(color_img1, img1_shift, stitched_img_size, out_img);
     stitchToBaseImg(out_img, color_img2, homo, img1_shift);
-}
-
-
-
-int Stitch::getDirection(){
-    return direction;
 }
