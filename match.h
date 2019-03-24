@@ -21,6 +21,7 @@ public:
     vector<KeyPoint> getKeypointsVec(int i);
     Mat getFeatureDescriptors(int i);
     vector<DMatch> getMatches();
+    int getMatchesCount();
 
 private:
     //auxiliary functions

@@ -108,3 +108,7 @@ Mat Match::getFeatureDescriptors(int i){
 vector<DMatch> Match::getMatches(){
     return good_matches;
 }
+
+int Match::getMatchesCount() {
+    return good_matches.size();
+}
