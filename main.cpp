@@ -14,15 +14,22 @@ int main() {
 
     //Panorama
     Panorama *pnrm = new Panorama();
-    pnrm->create(6, "desk");
+    pnrm->create(5, "Rainier");
 
-    pnrm->stitch();
-    pnrm->stitch();
-    pnrm->stitch();
-    pnrm->stitch();
-    pnrm->stitch();
+    pnrm->stitchToBase(1);
+    pnrm->stitchToBase(3);
+    pnrm->stitchToBase(4);
+    pnrm->stitchToBase(5);
+    pnrm->stitchToBase(6);
+    pnrm->stitchToBase(2);
 
-    pnrm->printMatchesCount();
+//    pnrm->stitchToBase(1);
+//    pnrm->stitchToBase(2);
+//    pnrm->stitchToBase(3);
+//    pnrm->stitchToBase(4);
+//    pnrm->stitchToBase(5);
+//    pnrm->stitchToBase(6);
+
 
     waitKey(0);
     return 0;

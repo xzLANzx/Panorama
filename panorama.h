@@ -13,24 +13,20 @@ using namespace std;
 class Panorama{
 public:
     void create(int imgs_count, string img_name);
-    void countMatches();
-    void pickTwoImgs(int &max_i, int &max_j);   //return the index of the two pictures to stitch
-    void stitch();
-    void printMatchesCount();
+    void stitchToBase(int i);
 
 private:
     //auxiliary functions
     string generateNewImgName();
-    void update(int i, int j);
 
     //data members
     string img_path;
     string img_name;
-    Mat stitched_img;
+    int imgs_count;
+    int stitched_count;
+    Mat base_img;
 
     int max_id;                         //last id of saved image
-    vector<int> unstitched_imgs_vec;    //store the indices of unstitched images
-    vector<vector<int>> matches_count;  //store num of matches between images
 };
 
 #endif //PANORAMA_PANORAMA_H
