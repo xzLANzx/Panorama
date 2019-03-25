@@ -1,35 +1,17 @@
 #include <string>
-#include "ransac.h"
-#include "stitch.h"
 #include "panorama.h"
-#include "functions.h"
 
 using namespace cv;
 using namespace std;
 
 
-int main() {
-    //TODO: c++ class big three
+int main(int argc, char *argv[]) {
 
+    int img_count = stoi(argv[1]);
+    string img_name = argv[2];
 
-    //Panorama
-    Panorama *pnrm = new Panorama();
-    pnrm->create(5, "Rainier");
-
-    pnrm->stitchToBase(1);
-    pnrm->stitchToBase(3);
-    pnrm->stitchToBase(4);
-    pnrm->stitchToBase(5);
-    pnrm->stitchToBase(6);
-    pnrm->stitchToBase(2);
-
-//    pnrm->stitchToBase(1);
-//    pnrm->stitchToBase(2);
-//    pnrm->stitchToBase(3);
-//    pnrm->stitchToBase(4);
-//    pnrm->stitchToBase(5);
-//    pnrm->stitchToBase(6);
-
+    auto *pnrm = new Panorama();
+    pnrm->stitchAll(img_count, img_name);
 
     waitKey(0);
     return 0;

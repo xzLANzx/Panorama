@@ -81,11 +81,6 @@ void Ransac::iterRANSAC(int numIterations, double inlierThreshold, Mat &homo) {
             bestInliersCount = inliersCount;
             H.copyTo(bestHomo);
         }
-
-//            cout << "Total number of matches: " << matches_count << endl;
-//            cout << "Max Inliers Count: " << bestInliersCount << endl;
-//            cout << "Best Homography: " << bestHomo << endl;
-//            cout << endl;
     }
     bestHomo.copyTo(homo);
 }
